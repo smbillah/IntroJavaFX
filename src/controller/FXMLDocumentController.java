@@ -6,6 +6,7 @@
 package controller;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
@@ -14,8 +15,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
@@ -51,6 +58,105 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button buttonReadByNameCGPA;
 
+    /**
+     * 
+     * Quiz 4 begin
+     */
+    @FXML
+    private TextField textboxName;
+
+    @FXML
+    private TableView<Student> studentTable;      
+    @FXML
+    private TableColumn<Student, String> studentName;
+    @FXML
+    private TableColumn<Student, Integer> studentID;
+    @FXML
+    private TableColumn<Student, Float> studentGPA;
+          
+     // the observable list of students that is used to insert data into the table
+    private ObservableList<Student> studentData;    
+    
+    // add the proper data to the observable list to be rendered in the table
+    public void setTableData(List<Student> studentList) {
+        
+        // initialize the studentData variable
+        studentData = FXCollections.observableArrayList();
+
+        // add the student objects to an observable list object for use with the GUI table
+        studentList.forEach(s -> { studentData.add(s); });
+        
+        // set the the table items to the data in studentData; refresh the table
+        studentTable.setItems(studentData);
+        studentTable.refresh();
+    }
+    
+    @FXML
+    void searchByNameAction(ActionEvent event) {
+        System.out.println("clicked");
+                        
+        // getting the name from input box        
+        String name = textboxName.getText();
+        
+        // calling a db read operaiton, readByName
+        List<Student> students = readByName(name);
+        
+        if(students == null || students.isEmpty()) {
+            
+            // show an alert to inform user 
+            Alert alert=new Alert(AlertType.INFORMATION);
+            alert.setTitle("Information Dialog Box");// line 2
+            alert.setHeaderText("This is header section to write heading");// line 3
+            alert.setContentText("No student");// line 4
+            alert.showAndWait(); // line 5
+        }
+        else 
+        {
+        
+            // setting table data
+            setTableData(students);
+        }
+
+    }
+
+    @FXML
+    void searchByNameAdvancedAction(ActionEvent event) {
+        System.out.println("clicked");
+                        
+        // getting the name from input box        
+        String name = textboxName.getText();
+        
+        // calling a db read operaiton, readByName
+        List<Student> students = readByNameAdvanced(name);
+        
+        // setting table data
+        //setTableData(students);
+        
+        // add an alert
+        if(students == null || students.isEmpty()) {
+            
+            // show an alert to inform user 
+            Alert alert=new Alert(AlertType.INFORMATION);
+            alert.setTitle("Information Dialog Box");// line 2
+            alert.setHeaderText("This is header section to write heading");// line 3
+            alert.setContentText("No student");// line 4
+            alert.showAndWait(); // line 5
+        }
+        else 
+        {        
+            // setting table data
+            setTableData(students);
+        }
+
+    }
+    
+    
+    /**
+     * 
+     * @param Quiz 4 end
+     */
+    
+    
     @FXML
     void createStudent(ActionEvent event) {
         Scanner input = new Scanner(System.in);
@@ -183,7 +289,9 @@ public class FXMLDocumentController implements Initializable {
             System.out.println(s.getId() + " " + s.getName() + " " + s.getCgpa());
         }
     }
-
+      
+    
+    
     // Database manager
     EntityManager manager;
 
@@ -192,6 +300,19 @@ public class FXMLDocumentController implements Initializable {
         // loading students from database
         //database reference: "IntroJavaFXPU"
         manager = (EntityManager) Persistence.createEntityManagerFactory("IntroJavaFXPU").createEntityManager();
+        
+        /**
+         * Quiz 4 begin
+         */
+                
+        // set the cell value factories for the TableView Columns
+        studentName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        studentID.setCellValueFactory(new PropertyValueFactory<>("id"));
+        studentGPA.setCellValueFactory(new PropertyValueFactory<>("gpa"));
+        
+        /**
+         * Quiz 4 end
+         */
 
     }
 
@@ -261,7 +382,32 @@ public class FXMLDocumentController implements Initializable {
         }
         
         return students;
-    }        
+    }     
+    
+    /**
+     * 
+     * Quiz 4 begin 
+     */
+    
+    public List<Student> readByNameAdvanced(String name){
+        Query query = manager.createNamedQuery("Student.findByNameAdvanced");
+        
+        // setting query parameter
+        query.setParameter("name", name);
+        
+        // execute query
+        List<Student> students =  query.getResultList();
+        for (Student student: students) {
+            System.out.println(student.getId() + " " + student.getName() + " " + student.getCgpa());
+        }
+        
+        return students;
+    }     
+    
+    /**
+     * 
+     * Quiz 4 end 
+     */
     
     public List<Student> readByNameAndCGPA(String name, double cpga){
         Query query = manager.createNamedQuery("Student.findByNameAndCgpa");

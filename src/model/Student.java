@@ -28,6 +28,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Student.findByName", query = "SELECT s FROM Student s WHERE s.name = :name")
     , @NamedQuery(name = "Student.findByCgpa", query = "SELECT s FROM Student s WHERE s.cgpa = :cgpa")
     , @NamedQuery(name = "Student.findByNameAndCgpa", query = "SELECT s FROM Student s WHERE s.name = :name and s.cgpa = :cgpa")
+        // help: https://www.appsdeveloperblog.com/how-to-use-like-expression-in-jpa-sql-query/
+    , @NamedQuery(name = "Student.findByNameAdvanced", query = "SELECT s FROM Student s WHERE  LOWER(s.name) LIKE  CONCAT('%', LOWER(:name), '%')") 
 })
 public class Student implements Serializable {
 
