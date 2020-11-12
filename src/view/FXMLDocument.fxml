@@ -29,7 +29,7 @@
       <TextField fx:id="textboxName" layoutX="88.0" layoutY="271.0" prefHeight="27.0" prefWidth="217.0" promptText="Enter Student Name" />
       <Label layoutX="18.0" layoutY="276.0" text="By Name:" />
       <Button layoutX="311.0" layoutY="271.0" mnemonicParsing="false" onAction="#searchByNameAction" text="Search" />
-      <TableView fx:id="studentTable" editable="true" layoutX="15.0" layoutY="341.0" prefHeight="287.0" prefWidth="412.0">
+      <TableView fx:id="studentTable" editable="true" layoutX="15.0" layoutY="341.0" prefHeight="274.0" prefWidth="412.0">
          <columns>
             <TableColumn fx:id="studentID" prefWidth="87.0" text="ID" />
             <TableColumn fx:id="studentName" prefWidth="158.0" text="Name" />
@@ -37,5 +37,7 @@
          </columns>
       </TableView>
       <Button layoutX="309.0" layoutY="303.0" mnemonicParsing="false" onAction="#searchByNameAdvancedAction" prefHeight="27.0" prefWidth="115.0" text="Advanced Search" />
+      <Button layoutX="337.0" layoutY="618.0" mnemonicParsing="false" onAction="#actionShowDetails" text="Show Details" />
+      <Button layoutX="172.0" layoutY="618.0" mnemonicParsing="false" onAction="#actionShowDetailsInPlace" prefHeight="27.0" prefWidth="154.0" text="Show Details In-Place" />
     </children>
 </AnchorPane>

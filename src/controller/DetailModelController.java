@@ -43,41 +43,39 @@ public class DetailModelController {
     // going back to previous scene    
     @FXML
     void backButtonAction(ActionEvent event) {
+        // option 1: get current stage -- from event
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        //Stage stage = (Stage)backButton.getScene().getWindow();
-        if (previousScene != null){
+        
+        //  option 2: get current stage -- from backbutton        
+        // Stage stage = (Stage)backButton.getScene().getWindow();
+        
+        if (previousScene != null) {
             stage.setScene(previousScene);
         }
 
     }
 
-    Student selectedModel;    
+    Student selectedModel;
     Scene previousScene;
 
     public void setPreviousScene(Scene scene) {
         previousScene = scene;
         backButton.setDisable(false);
-        
-    } 
-    
+
+    }
+
     public void initData(Student model) {
         selectedModel = model;
         labelID.setText(model.getId().toString());
         labelValue.setText(model.getName());
 
         try {
-            // path points to  build/classes/ist311project
-            Path p = Paths.get(getClass().getResource("/").toURI());                                   
-            File f = new File(p.getParent().getParent().toString() + "/resources/images/" + model.getName().toLowerCase()+".png");
-            
-            if (f.isFile()){
-                Image im = new Image("file:" +f.getAbsolutePath());
-                if (im != null) {
-                    image.setImage(im);
-                }                
-            }            
+            // path points to /resource/images/
+            String imagename = "/resource/images/" + model.getName() + ".png";
+            Image profile = new Image(getClass().getResourceAsStream(imagename));
+            image.setImage(profile);
 
-        } catch (URISyntaxException ex) {
+        } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -88,7 +86,7 @@ public class DetailModelController {
         assert labelID != null : "fx:id=\"labelID\" was not injected: check your FXML file 'DetailModelView.fxml'.";
         assert labelValue != null : "fx:id=\"labelValue\" was not injected: check your FXML file 'DetailModelView.fxml'.";
         assert image != null : "fx:id=\"image\" was not injected: check your FXML file 'DetailModelView.fxml'.";
-        
+
         backButton.setDisable(true);
 
     }
